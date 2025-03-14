@@ -126,3 +126,58 @@ If you want your project co-workers to use the same settings, configure and shar
 npm run lint:fix
 ```
 Every files in your project should be formatted correctly.
+
+### Auto Import and Components
+
+#### Installation
+```sh
+npm i -D unplugin-auto-import unplugin-vue-components
+```
+
+#### Update `vite.config.ts`
+```diff
++ import AutoImport from 'unplugin-auto-import/vite'
++ import Components from 'unplugin-vue-components/vite'
+
+export default defineConfig({
+  plugins: [
+    vue(),
+    vueDevTools(),
++   AutoImport({
++     imports: ['vue', 'vue-router', 'pinia'],
++     dirs: ['./src/composables', './src/configs', './src/stores'],
++   }),
++   Components({
++     dirs: ['./src/components', './src/layouts'],
++   }),
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+})
+```
+#### Generate `auto-imports.d.ts` and `components.d.ts`
+```sh
+npm run dev
+```
+#### Update `.gitignore`
+```diff
++ auto-imports.d.ts
++ components.d.ts
+```
+#### Update `tsconfig.app.json`
+```diff
+{
+  ...
+  "include": [
+    "env.d.ts",
++   "auto-imports.d.ts",
++   "components.d.ts",
+    "src/**/*",
+    "src/**/*.vue"
+  ],
+  ...
+}
+```
