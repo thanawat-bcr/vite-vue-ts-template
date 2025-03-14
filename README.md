@@ -181,3 +181,73 @@ npm run dev
   ...
 }
 ```
+
+### Primevue + SASS + Tailwind
+
+#### Installation
+```sh
+npm i primevue @primeuix/themes primeicons
+npm i sass tailwindcss @tailwindcss/vite tailwindcss-primeui
+npm i -D @primevue/auto-import-resolver
+```
+
+#### Create `styles.css`
+```css
+@import "tailwindcss";
+@import "tailwindcss-primeui";
+@import 'primeicons/primeicons.css';
+```
+
+#### Update `main.ts`
+```diff
++ import { definePreset } from '@primeuix/themes'
++ import Aura from '@primeuix/themes/aura'
+import { createPinia } from 'pinia'
++ import PrimeVue from 'primevue/config'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+
+import router from './router'
+- import './assets/main.css'
++ import '@/assets/styles.css'
+
++ const PrimeVueCustomPreset = definePreset(Aura, {})
+const app = createApp(App)
+
++ app.use(PrimeVue, {
++   theme: {
++     preset: PrimeVueCustomPreset,
++     options: {
++       darkModeSelector: false,
++       cssLayer: {
++         name: 'primevue',
++         order: 'theme, base, primevue',
++       },
++     },
++   },
++ })
+app.use(createPinia())
+app.use(router)
+
+app.mount('#app')
+```
+
+#### Update `vite.config.ts`
+```diff
++ import { PrimeVueResolver } from '@primevue/auto-import-resolver'
++ import tailwindcss from '@tailwindcss/vite'
+// ...
+
+export default defineConfig({
+  plugins: [
+    // ...
++   tailwindcss(),
+    Components({
+      dirs: ['./src/components', './src/layouts'],
++     resolvers: [PrimeVueResolver()],
+    }),
+    // ...
+  ],
+})
+```
