@@ -170,3 +170,70 @@ npm install -D unplugin-auto-import unplugin-vue-components @primevue/auto-impor
 + auto-imports.d.ts
 + components.d.ts
 ```
+
+### Axios
+1. Installation
+```sh
+npm install axios
+```
+2. Create `src/utils/apiClient.ts`
+```ts
+import type { AxiosResponse, AxiosError } from 'axios'
+import axios from 'axios'
+
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_BASE_API || 'http://localhost:8000',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+apiClient.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
+    if (error.response?.status === 401) {
+      console.error('Unauthorized access', error)
+    }
+    else if (error.response?.status === 404) {
+      console.error('Request not found', error)
+    }
+    else {
+      console.error('Something Went Wrong:', error)
+    }
+    return Promise.reject(error)
+  },
+)
+
+export default apiClient
+```
+3. Usage
+```ts
+import apiClient from '@/utils/apiClient'
+
+try  {
+    const response = await apiClient.post('/login', {
+        username: 'your_username',
+        password: 'your_password',
+    })
+    const { refresh, access } = response.data
+    localStorage.setItem('refresh', refresh)
+    apiClient.defaults.headers.common.Authorization = `Bearer ${access}`
+} catch(error) {
+    console.error(error)
+    apiClient.defaults.headers.common.Authorization = ''
+}
+```
+OR Create service layer
+```ts
+import apiClient from '@/utils/apiClient'
+
+export function useUserApi() {
+    function login(body) {
+        return apiClient.post('/login', body)
+    }
+    
+    export {
+        login,
+    }
+}
+```
