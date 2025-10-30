@@ -1,55 +1,52 @@
-# vite-vue-ts-template
+# Create Vite + Vue + TypeScript
 
-This template should help get you started developing with Vue 3 in Vite.
+## Init Project
+1. `npm create vite@latest --project_name`
+2. Select a framework: `Vue`
+3. Select a variant: `Official Vue Starter`
+4. Use rolldown-vite: `No`
+5. Install with npm and start now?: `Yes`
+6. Select features: ( Your Desired )
+- [x] TypeScript
+- [ ] JSX Support
+- [x] Router (SPA development)
+- [x] Pinia (state management)
+- [ ] Vitest (unit testing)
+- [ ] End-to-End Testing
+- [x] ESLint (error prevention)
+- [ ] Prettier (code formatting)
+7. Select experimental features: `None`
+8. Skip all example code: `No`
+9. `cd --project_name && npm install`
 
-## Setup Guide
+## Install Dependencies ( Optional )
+### Eslint [@antfu/eslint-config](https://github.com/antfu/eslint-config)
 
-### Project Initialize
-
-```sh
-npm create vite@latest <name>
-```
-
-### Project Setup
-
-1. Setup your project framework and features
-- Project name: `Project Name`
-- Select a framework: `Vue`
-- Select a variant: `Official Vue Starter`
-- Select features to include in your project:
-  - [x] TypeScript
-  - [ ] JSX Support
-  - [x] Router (SPA development)
-  - [x] Pinia (state management)
-  - [ ] Vitest (unit testing)
-  - [ ] End-to-End Testing
-  - [x] ESLint (error prevention)
-  - [ ] Prettier (code formatting)
-
-2. Install dependencies
-```sh
-cd <name>
-npm install
-npm run dev
-```
-
-### ESLint
-
-We are using `@antfu/eslint-config` for formatting, [Document](https://github.com/antfu/eslint-config)
-
-#### Installation
+1. Installation
 ```sh
 npm install -D @antfu/eslint-config eslint-plugin-format
 ```
-
-#### Update `eslint.config.ts`
+2. Update `eslint.config.ts`
 ```ts
 import antfu from '@antfu/eslint-config'
 
-export default antfu()
+export default antfu({
+  formatters: true,
+  vue: {
+    overrides: {
+      'vue/block-order': ['error', {
+        order: ['template', 'script', 'style'],
+      }],
+    },
+  },
+  rules: {
+    'no-console': 'off',
+  },
+})
+
 ```
-#### Add Script for `package.json`
-```diff
+3. Update `package.json` ( Optional )
+```json
   "scripts": {
     "dev": "vite",
     ...
@@ -57,197 +54,118 @@ export default antfu()
 +   "lint:fix": "eslint --fix"
   },
 ```
-
-#### Update `.vscode/settings.json`
-```json
-{
-  // Disable the default formatter, use eslint instead
-  "prettier.enable": false,
-  "editor.formatOnSave": false,
-
-  // Auto fix
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.organizeImports": "never"
-  },
-
-  // Silent the stylistic rules in you IDE, but still auto fix them
-  "eslint.rules.customizations": [
-    { "rule": "style/*", "severity": "off", "fixable": true },
-    { "rule": "format/*", "severity": "off", "fixable": true },
-    { "rule": "*-indent", "severity": "off", "fixable": true },
-    { "rule": "*-spacing", "severity": "off", "fixable": true },
-    { "rule": "*-spaces", "severity": "off", "fixable": true },
-    { "rule": "*-order", "severity": "off", "fixable": true },
-    { "rule": "*-dangle", "severity": "off", "fixable": true },
-    { "rule": "*-newline", "severity": "off", "fixable": true },
-    { "rule": "*quotes", "severity": "off", "fixable": true },
-    { "rule": "*semi", "severity": "off", "fixable": true }
-  ],
-
-  // Enable eslint for all supported languages
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "vue",
-    "html",
-    "markdown",
-    "json",
-    "jsonc",
-    "yaml",
-    "toml",
-    "xml",
-    "gql",
-    "graphql",
-    "astro",
-    "svelte",
-    "css",
-    "less",
-    "scss",
-    "pcss",
-    "postcss"
-  ]
-}
-```
-
-#### Update `.gitignore` (Optional)
-If you want your project co-workers to use the same settings, configure and share a settings file.
-```diff
-# Editor directories and files
-.vscode/*
-+ !.vscode/extensions.json
-+ !.vscode/settings.json
-```
-
-#### Fix Initial Format
+4. Test
 ```sh
+npm run lint
 npm run lint:fix
 ```
-Every files in your project should be formatted correctly.
+#### If your IDE cannot format on save
+Rename from `eslint.config.ts` to `esling.config.js`
 
-### Auto Import and Components
-
-#### Installation
+### Tailwind CSS V4 + SASS
+1. Installation
 ```sh
-npm i -D unplugin-auto-import unplugin-vue-components
+npm install tailwindcss @tailwindcss/vite
+npm install -D sass
 ```
-
-#### Update `vite.config.ts`
-```diff
-+ import AutoImport from 'unplugin-auto-import/vite'
-+ import Components from 'unplugin-vue-components/vite'
-
-export default defineConfig({
-  plugins: [
-    vue(),
-    vueDevTools(),
-+   AutoImport({
-+     imports: ['vue', 'vue-router', 'pinia'],
-+     dirs: ['./src/composables', './src/configs', './src/stores'],
-+   }),
-+   Components({
-+     dirs: ['./src/components', './src/layouts'],
-+   }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-})
-```
-#### Generate `auto-imports.d.ts` and `components.d.ts`
-```sh
-npm run dev
-```
-#### Update `.gitignore`
-```diff
-+ auto-imports.d.ts
-+ components.d.ts
-```
-#### Update `tsconfig.app.json`
-```diff
-{
-  ...
-  "include": [
-    "env.d.ts",
-+   "auto-imports.d.ts",
-+   "components.d.ts",
-    "src/**/*",
-    "src/**/*.vue"
-  ],
-  ...
-}
-```
-
-### Primevue + SASS + Tailwind
-
-#### Installation
-```sh
-npm i primevue @primeuix/themes primeicons
-npm i sass tailwindcss @tailwindcss/vite tailwindcss-primeui
-npm i -D @primevue/auto-import-resolver
-```
-
-#### Create `styles.css`
-```css
-@import "tailwindcss";
-@import "tailwindcss-primeui";
-@import 'primeicons/primeicons.css';
-```
-
-#### Update `main.ts`
-```diff
-+ import { definePreset } from '@primeuix/themes'
-+ import Aura from '@primeuix/themes/aura'
-import { createPinia } from 'pinia'
-+ import PrimeVue from 'primevue/config'
-
-import { createApp } from 'vue'
-import App from './App.vue'
-
-import router from './router'
-- import './assets/main.css'
-+ import '@/assets/styles.css'
-
-+ const PrimeVueCustomPreset = definePreset(Aura, {})
-const app = createApp(App)
-
-+ app.use(PrimeVue, {
-+   theme: {
-+     preset: PrimeVueCustomPreset,
-+     options: {
-+       darkModeSelector: false,
-+       cssLayer: {
-+         name: 'primevue',
-+         order: 'theme, base, primevue',
-+       },
-+     },
-+   },
-+ })
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
-```
-
-#### Update `vite.config.ts`
-```diff
-+ import { PrimeVueResolver } from '@primevue/auto-import-resolver'
-+ import tailwindcss from '@tailwindcss/vite'
-// ...
+2. Update `vite.config.ts`
+```ts
+import { defineConfig } from 'vite'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
     // ...
 +   tailwindcss(),
-    Components({
-      dirs: ['./src/components', './src/layouts'],
-+     resolvers: [PrimeVueResolver()],
-    }),
-    // ...
   ],
 })
+```
+3. Create `src/assets/styles.css`
+```css
+@import "tailwindcss";
+```
+4. Update `main.ts`
+```ts
+// ...
++ import '@/assets/styles.css'
+// ...
+```
+### PrimeVue V4 with Tailwind CSS
+1. Installation
+```sh
+npm install primevue @primeuix/themes tailwindcss-primeui
+```
+2. Update `main.ts`
+```ts
++ import { definePreset } from '@primeuix/themes'
++ import Aura from '@primeuix/themes/aura'
++ import PrimeVue from 'primevue/config'
+
+// ...
+// OPTIONAL PRIMEVUE PRESET
+const PrimeVueAuraCustomPreset = definePreset(Aura, {
+  semantic: {
+    primary: {
+      50: '{emerald.50}',
+      100: '{emerald.100}',
+      200: '{emerald.200}',
+      300: '{emerald.300}',
+      400: '{emerald.400}',
+      500: '{emerald.500}',
+      600: '{emerald.600}',
+      700: '{emerald.700}',
+      800: '{emerald.800}',
+      900: '{emerald.900}',
+      950: '{emerald.950}',
+    },
+  },
+})
+// OR USE DEFAULT AURA OR ANY THEME YOU DESIRED
+app.use(PrimeVue, {
+  theme: {
+    preset: PrimeVueAuraCustomPreset,
+    options: {
+      darkModeSelector: 'none',
+      cssLayer: {
+        name: 'primevue',
+        order: 'base, theme, primevue',
+      },
+    },
+  },
+})
+```
+3. Update `styles.css`
+```css
+@import "tailwindcss";
++ @import "tailwindcss-primeui";
+```
+
+### Auto Import and Components
+1. Installation
+```sh
+npm install -D unplugin-auto-import unplugin-vue-components @primevue/auto-import-resolver   
+```
+2. Update `vite.config.ts`
+```ts
++ import { PrimeVueResolver } from '@primevue/auto-import-resolver'
++ import AutoImport from 'unplugin-auto-import/vite'
++ import Components from 'unplugin-vue-components/vite'
+// ...
+  plugins: [
+    vue(),
+    vueDevTools(),
+    tailwindcss(),
++   AutoImport({
++     imports: ['vue', 'vue-router', 'pinia'],
++   }),
++   Components({
++     globs: [],
++     resolvers: [PrimeVueResolver()],
++   }),
+  ],
+```
+3. Update `.gitignore`
+```
++ auto-imports.d.ts
++ components.d.ts
 ```
