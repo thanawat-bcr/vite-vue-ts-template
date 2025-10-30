@@ -93,7 +93,7 @@ export default defineConfig({
 ### PrimeVue V4 with Tailwind CSS
 1. Installation
 ```sh
-npm install primevue @primeuix/themes tailwindcss-primeui
+npm install primevue @primeuix/themes tailwindcss-primeui primeicons
 ```
 2. Update `main.ts`
 ```diff
@@ -138,6 +138,7 @@ app.use(PrimeVue, {
 ```diff
 @import "tailwindcss";
 + @import "tailwindcss-primeui";
++ @import "primeicons/primeicons.css";
 ```
 
 ### Auto Import and Components
