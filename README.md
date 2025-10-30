@@ -46,7 +46,7 @@ export default antfu({
 
 ```
 3. Update `package.json` ( Optional )
-```json
+```diff
   "scripts": {
     "dev": "vite",
     ...
@@ -69,7 +69,7 @@ npm install tailwindcss @tailwindcss/vite
 npm install -D sass
 ```
 2. Update `vite.config.ts`
-```ts
+```diff
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -85,7 +85,7 @@ export default defineConfig({
 @import "tailwindcss";
 ```
 4. Update `main.ts`
-```ts
+```diff
 // ...
 + import '@/assets/styles.css'
 // ...
@@ -96,7 +96,7 @@ export default defineConfig({
 npm install primevue @primeuix/themes tailwindcss-primeui
 ```
 2. Update `main.ts`
-```ts
+```diff
 + import { definePreset } from '@primeuix/themes'
 + import Aura from '@primeuix/themes/aura'
 + import PrimeVue from 'primevue/config'
@@ -135,7 +135,7 @@ app.use(PrimeVue, {
 })
 ```
 3. Update `styles.css`
-```css
+```diff
 @import "tailwindcss";
 + @import "tailwindcss-primeui";
 ```
@@ -146,7 +146,7 @@ app.use(PrimeVue, {
 npm install -D unplugin-auto-import unplugin-vue-components @primevue/auto-import-resolver   
 ```
 2. Update `vite.config.ts`
-```ts
+```diff
 + import { PrimeVueResolver } from '@primevue/auto-import-resolver'
 + import AutoImport from 'unplugin-auto-import/vite'
 + import Components from 'unplugin-vue-components/vite'
@@ -165,7 +165,7 @@ npm install -D unplugin-auto-import unplugin-vue-components @primevue/auto-impor
   ],
 ```
 3. Update `.gitignore`
-```
+```diff
 + auto-imports.d.ts
 + components.d.ts
 ```
