@@ -170,6 +170,12 @@ npm install -D unplugin-auto-import unplugin-vue-components @primevue/auto-impor
 + auto-imports.d.ts
 + components.d.ts
 ```
+4. Update `env.d.ts`
+```diff
+/// <reference types="vite/client" />
++ /// <reference types="./auto-imports.d.ts" />
++ /// <reference types="./components.d.ts" />
+```
 
 ### Axios
 1. Installation
